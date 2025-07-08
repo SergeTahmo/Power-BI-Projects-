@@ -2,105 +2,107 @@
 Table of Contents
 Introduction
 
-## Data Acquisition and Preparation
+Data Acquisition and Preparation
 
 Data Cleaning
+
 Data Processing
+
 Data Analysis and Visualization
+
 Data Interpretation
+
 Recommendations
 
-## Introduction
-- This project focuses on analyzing Mercedes-Benz vehicle sales using a custom-built interactive dashboard. The objective is to understand price trends, customer demographics, vehicle body styles, engine types, and sales distribution across regions. The analysis also tracks performance across two years (2022 and 2023), providing real-time insights for decision-makers and dealership managers.
+Introduction
+This project focuses on analyzing Mercedes-Benz vehicle sales using a custom-built interactive dashboard. The objective is to understand price trends, customer demographics, vehicle body styles, engine types, and sales distribution across regions. The analysis tracks performance across two years (2022 and 2023), providing real-time insights for decision-makers and dealership managers.
 
-## Data Acquisition and Preparation
-- The data was sourced internally and includes sales transactions of various Mercedes-Benz models. The dataset contains the following columns:
-   - Car_id 
-   - Date, 
-   - Customer Name, 
-   - Gender, 
-   - Annual Income, 
-   - Dealer_Name,
-   - Company, 
-   - Model,
-   - Engine,
-   - Transmission, 
-   - Color,
-   - Price ($),
-   - Dealer_No,
-   - Body Style, 
-   - Phone,
-   - Dealer_Region
+The following bullets list the insights I aimed to derive:
 
-## These columns represent customer profiles, dealership information, and detailed vehicle specifications for each transaction.
+What is the average price of Mercedes-Benz vehicles sold?
+
+Which model and engine type performed best?
+
+What is the body style distribution across sold units?
+
+What were the peak sales months?
+
+How widespread is the dealer coverage by region?
+
+Data Acquisition and Preparation
+The data was sourced internally and includes transaction-level sales data of various Mercedes-Benz models. The dataset contains the following columns:
+
+Car_id, Date, Customer Name, Gender, Annual Income, Dealer_Name, Company, Model, Engine, Transmission, Color, Price ($), Dealer_No, Body Style, Phone, Dealer_Region
+
+These columns represent customer profiles, dealership information, and vehicle specifications for each sale.
 
 Data Cleaning
-Data cleaning involved the following steps
-Removed duplicates using Car_id and Date as keys.
+Data cleaning included the following steps:
 
-Checked and corrected inconsistent formats for Date, Gender, and Dealer_Region.
+Removed duplicate records using Car_id and Date as keys.
 
-Converted Price ($) to numeric type for proper aggregation.
+Corrected inconsistent formats for Date, Gender, and Dealer_Region.
 
-Standardized categories for Body Style, Engine, and Transmission.
+Converted Price ($) to numeric type for analysis.
 
-Cleaned phone numbers and ensured dealer regions were correctly labeled.
+Standardized values for Body Style, Engine, and Transmission.
+
+Cleaned up phone number entries and validated dealer region names.
 
 Data Processing
-The data was processed using Power BI for its flexibility in modeling, visuals, and interactivity. Data transformations included:
+The cleaned data was processed in Power BI, allowing for transformation and modeling through Power Query Editor:
 
-Grouping sales by year, model, and dealer region.
+Grouped data by year, model, and dealer region.
 
-Calculating total sales and quantity sold.
+Calculated total sales, quantity sold, and average price.
 
-Deriving average price per unit.
+Derived fields like monthly trends and model dominance.
 
-Categorizing vehicles by engine type and body style.
-
-Enriching time-series data for monthly trend analysis.
+Enriched records with categorical insights (e.g., body style vs. engine type).
 
 Data Analysis and Visualization
-The dashboard consists of the following key visual elements:
+The final Power BI dashboard included the following visualizations:
 
-💰 Average Price Card – Displays the overall average vehicle price ($30.16K).
+💰 Average Price Card – Average selling price: $30.16K
 
-🚗 Top Model Insight – M-Class was highlighted with 123 units sold, totaling $4M in revenue.
+🚗 Top Model – M-Class led with 123 units sold and $4M in sales
 
-📍 Dealer Reach – Sales spread across 7 regions.
+🌍 Dealer Coverage – Sales spanned 7 regions
 
-🧁 Body Type Breakdown – Majority were SUVs (57.72%), followed by Hatchbacks (27.64%) and Hardtops (14.63%).
+🧁 Body Type Distribution – SUVs dominated with 57.72%, followed by Hatchbacks (27.64%) and Hardtops (14.63%)
 
-🛠️ Engine Type Distribution – Overhead Camshaft was the dominant engine (96 vs. 27).
+🛠️ Engine Type – Overhead Camshaft led with 96 vehicles, compared to 27 Double OHC
 
-📊 Monthly Sales Trend – Sales peaked in December and October, showing seasonal surges.
+📊 Monthly Sales Trend – Peak sales occurred in October and December
 
-All visuals are dynamic and filterable by year, model, dealer, and region.
+All visuals are filterable by year, model, region, and dealer for interactive insight.
 
 Data Interpretation
-The analysis yielded the following insights:
+The dashboard revealed key insights:
 
-SUVs dominate the Mercedes-Benz sales portfolio, aligning with consumer demand for larger vehicles.
+SUVs are the most in-demand body style among Mercedes-Benz buyers.
 
-The M-Class model is the top performer in both units sold and revenue generated.
+The M-Class model performed best in terms of units and revenue.
 
-December is the strongest sales month, likely driven by end-of-year promotions and incentives.
+The end-of-year months, particularly December, showed high sales volumes.
 
-Customers span multiple regions, but 7 regions contributed to the bulk of sales, showing strong national coverage.
+Overhead Camshaft engines are most popular, possibly indicating a default standard.
 
-Engine preference trends toward Overhead Camshaft, indicating possible standardization in newer models.
+The dealership network spans 7 regions, suggesting strong but potentially improvable market coverage.
 
 Recommendations
-Double down on SUV and M-Class promotions, as they account for the largest share of sales and revenue.
+Based on the findings:
 
-Target marketing campaigns for Q4, especially around October–December, to capitalize on seasonal buying patterns.
+📈 Focus marketing on M-Class and SUVs, the highest-performing segments.
 
-Expand dealership presence in underrepresented regions to grow market coverage and capture untapped potential.
+🗓️ Boost Q4 campaigns, especially in October–December to leverage seasonal momentum.
 
-Consider customer segmentation by income and gender to tailor offers and messaging.
+🌎 Expand dealer operations to underserved regions for higher market penetration.
 
-Thank you for reading this report!
+🧑‍💼 Use demographic filters (gender, income) to create personalized offers.
 
-Please reach out for further analysis or updates on model performance, regional strategies, or advanced forecasting.
+Thank you for reviewing this report!
+Please reach out for updates or additional analysis on models, trends, or forecasts.
 
 Author
 Serge Tahmo
