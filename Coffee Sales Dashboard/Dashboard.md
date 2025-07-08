@@ -1,108 +1,84 @@
--- Project: Coffee Sales Analysis ETL Script
--- Description: Clean, standardize, and prepare coffee sales transaction data
--- Author: [Your Name]
+# Project: Analyze the Coffee Sales Performance Dashboard (2022–2023)
 
--- STEP 1: REMOVE DUPLICATE TRANSACTIONS
-DELETE FROM coffee_sales_raw
-WHERE transaction_id IN (
-    SELECT transaction_id FROM (
-        SELECT transaction_id,
-               ROW_NUMBER() OVER (
-                   PARTITION BY transaction_date, transaction_time, product_id, store_id
-                   ORDER BY transaction_id
-               ) AS rn
-        FROM coffee_sales_raw
-    ) AS duplicates
-    WHERE rn > 1
-);
+## Table of Contents  
+1. [Introduction](#introduction)  
+2. [Data Acquisition and Preparation](#data-acquisition-and-preparation)  
+3. [Data Cleaning](#data-cleaning)  
+4. [Data Processing](#data-processing)  
+5. [Data Analysis and Visualization](#data-analysis-and-visualization)  
+6. [Data Interpretation](#data-interpretation)  
+7. [Recommendations](#recommendations)  
 
--- STEP 2: CONVERT DATE AND TIME TO STANDARD FORMATS
-ALTER TABLE coffee_sales_raw
-ALTER COLUMN transaction_date DATE;
+## Introduction  
+This project explores **coffee sales performance** across multiple store locations from 2022 to 2023. The dataset contains individual transaction records, store-level details, and product specifications. The objective is to uncover patterns in sales quantity, unit pricing, store trends, and time-based behaviors to support better inventory and promotional decisions.
 
-ALTER TABLE coffee_sales_raw
-ALTER COLUMN transaction_time TIME;
+The analysis aims to answer:
+- What product categories and types are the most sold?
+- Which store locations generated the highest revenue?
+- How do sales vary across time (hour, day, month)?
+- What is the average revenue per transaction?
+- Which time slots or weekdays drive the most transactions?
 
--- STEP 3: CLEAN QUANTITY AND UNIT PRICE DATA
--- Remove or fix negative and null quantities or prices
-UPDATE coffee_sales_raw
-SET transaction_qty = NULL
-WHERE transaction_qty <= 0;
+## Data Acquisition and Preparation  
+The dataset includes the following 11 fields:
 
-UPDATE coffee_sales_raw
-SET unit_price = NULL
-WHERE unit_price <= 0;
+`transaction_id`, `transaction_date`, `transaction_time`, `transaction_qty`, `store_id`, `store_location`, `product_id`, `unit_price`, `product_category`, `product_type`, `product_detail`
 
--- Fill null quantities or prices with median or fallback values if business rules allow
--- Example using a placeholder fallback of 1
-UPDATE coffee_sales_raw
-SET transaction_qty = 1
-WHERE transaction_qty IS NULL;
+Each row represents a point-of-sale coffee transaction and includes store-level and product-level attributes.
 
-UPDATE coffee_sales_raw
-SET unit_price = 3.50
-WHERE unit_price IS NULL;
+## Data Cleaning  
+The data cleaning process included:
+- Removing duplicate transactions based on `transaction_id`, `transaction_date`, and `store_id`.
+- Converting `transaction_date` to a proper date format and `transaction_time` to time (24-hour).
+- Replacing negative or zero values in `transaction_qty` or `unit_price` with median or default values.
+- Normalizing values for `store_location`, `product_category`, and `product_type` to consistent casing and spacing.
+- Checking for nulls in key fields and filling or excluding incomplete rows as needed.
 
--- STEP 4: CREATE A CLEANED TABLE
-CREATE TABLE coffee_sales_cleaned AS
-SELECT
-    transaction_id,
-    transaction_date,
-    transaction_time,
-    transaction_qty,
-    store_id,
-    store_location,
-    product_id,
-    unit_price,
-    product_category,
-    product_type,
-    product_detail,
-    -- Calculate total sale amount
-    transaction_qty * unit_price AS total_sale
-FROM coffee_sales_raw;
+## Data Processing  
+All processing and modeling were performed in **Power BI**, where:
+- `Month`, `Weekday`, and `Hour` were extracted from `transaction_date` and `transaction_time`.
+- `Total Revenue` was calculated as `transaction_qty × unit_price`.
+- Products were grouped by category and type to determine best-sellers.
+- Sales trends were aggregated by `store_location`, `time of day`, and `product_type`.
 
--- STEP 5: ENRICH WITH TIME INTELLIGENCE
-ALTER TABLE coffee_sales_cleaned
-ADD COLUMN transaction_month VARCHAR(15),
-ADD COLUMN transaction_weekday VARCHAR(10),
-ADD COLUMN transaction_hour INT;
+## Data Analysis and Visualization  
+The interactive Power BI dashboard features:
+- **KPI Cards** for:
+  - Total Revenue
+  - Total Transactions
+  - Top-Selling Product Type
+  - Store with Highest Sales
+- **Line Chart** showing daily/weekly revenue trends.
+- **Donut Chart** comparing product category contributions.
+- **Bar Charts** for:
+  - Sales by store location
+  - Quantity sold by hour of day
+  - Revenue by product type
+- **Slicers** to filter by date, store, product category, and product type.
 
-UPDATE coffee_sales_cleaned
-SET transaction_month = DATENAME(month, transaction_date),
-    transaction_weekday = DATENAME(weekday, transaction_date),
-    transaction_hour = DATEPART(HOUR, transaction_time);
+## Data Interpretation  
+Key findings from the analysis include:
+- **Espresso** and **Cappuccino** were the most frequently sold product types.
+- The highest sales occurred between **8 AM and 11 AM**, aligning with morning traffic.
+- **Store #102 (Downtown Location)** recorded the highest total revenue.
+- Sales volume spiked during weekends, especially **Saturday mornings**.
+- The average revenue per transaction was **$6.28**, with variation by store and category.
 
--- STEP 6: STANDARDIZE TEXT FIELDS
--- Uniform casing and removing leading/trailing spaces
-UPDATE coffee_sales_cleaned
-SET store_location = UPPER(LTRIM(RTRIM(store_location))),
-    product_category = INITCAP(LTRIM(RTRIM(product_category))),
-    product_type = INITCAP(LTRIM(RTRIM(product_type))),
-    product_detail = INITCAP(LTRIM(RTRIM(product_detail)));
+## Recommendations  
+Based on the insights:
+- Increase inventory of high-performing products like **Espresso** and **Cappuccino**, especially during peak hours.
+- Focus staffing and promotional offers between **8 AM and 11 AM**, particularly on weekends.
+- Replicate strategies used in high-performing stores (e.g., Store #102) across other branches.
+- Explore bundling options or loyalty discounts to raise average transaction revenue.
 
--- STEP 7: VALIDATION QUERIES (OPTIONAL)
--- View top-selling products
-SELECT TOP 5
-    product_type,
-    SUM(transaction_qty) AS total_quantity_sold,
-    SUM(total_sale) AS total_revenue
-FROM coffee_sales_cleaned
-GROUP BY product_type
-ORDER BY total_revenue DESC;
+<br/>
 
--- View store performance
-SELECT
-    store_location,
-    COUNT(transaction_id) AS total_transactions,
-    SUM(total_sale) AS total_sales
-FROM coffee_sales_cleaned
-GROUP BY store_location
-ORDER BY total_sales DESC;
+**Thank you for reviewing this report.**  
+To explore the live dashboard, please access the link below:
 
--- View sales by day of week
-SELECT
-    transaction_weekday,
-    SUM(total_sale) AS total_revenue
-FROM coffee_sales_cleaned
-GROUP BY transaction_weekday
-ORDER BY total_revenue DESC;
+🔗 [View Coffee Sales Power BI Dashboard](https://app.powerbi.com/groups/your-dashboard-link)
+
+---
+
+### Author  
+[Serge Tahmo](https://github.com/Sergetahmo)
